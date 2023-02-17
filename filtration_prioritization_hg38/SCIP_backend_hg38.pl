@@ -1,13 +1,13 @@
 #!/usr/bin/perl -w
 use strict;
-use Getopt::Std;
+use Getopt::Std; # help parse command-line arguments for single-character options
 my %opts;
 getopt ('n:',\%opts);
 my $name=$opts{"n"};
 my $ext=0; # extend percentage
 
 my @chr;
-for (my $i=1; $i<=22; $i++){
+for (my $i=1; $i<=22; $i++){ # add 1-22,X to the array @chr
  push @chr, $i;
 }
 push @chr, "X";
@@ -17,11 +17,11 @@ open out1, ">./user_data/$name.filt_step01.txt";
 foreach my $chr (@chr){
 my @shared;
 open file1, "gunzip -c ./hg38_files/hg38_centromeres.txt.gz |";
-while (<file1>){
+while (<file1>){ # read file1 line by line
  chomp;
- my @split1=split /\t/,$_;
+ my @split1=split /\t/,$_; # split the string by \t
  if ($split1[1] eq "chr$chr"){
-  my $temp="$split1[2]|$split1[3]";
+  my $temp="$split1[2]|$split1[3]"; # add the start and end locations to @shared
   push @shared, $temp;
  }
 }
