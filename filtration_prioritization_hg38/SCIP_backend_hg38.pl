@@ -14,7 +14,7 @@ push @chr, "X";
 # parallelization possible if this script is run by chromosome
 
 open out1, ">./user_data/$name.filt_step01.txt";
-foreach my $chr (@chr){
+foreach my $chr (@chr){ # for each chrom
 my @shared;
 open file1, "gunzip -c ./hg38_files/hg38_centromeres.txt.gz |";
 while (<file1>){ # read file1 line by line
@@ -80,12 +80,12 @@ while (<file1>){
 close file1;
 
 open file1, "<./user_data/$name.unfiltered_CNV.txt"; 
-while (<file1>){
+while (<file1>){ # for each CNV
  chomp;
  my @split1=split /\t/,$_;
- if ($split1[0] eq $chr){
-  my $out=1;
-  if ($split1[3] eq "DEL"){
+ if ($split1[0] eq $chr){ 
+  my $out=1; 
+  if ($split1[3] eq "DEL"){ # if loop1 (same level as loop2 and loop3)
    LOOP2: foreach my $shared (@shared){
     my @split2=split /\|/,$shared;
     if ($split2[0]<=$split1[1] && $split2[1]>=$split1[2]){
@@ -103,7 +103,7 @@ while (<file1>){
    }
   }
 
-  if ($split1[3] eq "DUP"){
+  if ($split1[3] eq "DUP"){ # if loop2
    LOOP2: foreach my $shared (@shared){
     my @split2=split /\|/,$shared;
     if ($split2[0]<=$split1[1] && $split2[1]>=$split1[2]){
@@ -121,7 +121,7 @@ while (<file1>){
    }
   }
 
-  if ($out==1){
+  if ($out==1){ # if loop3
    print out1 "$_\n";
   }
  }
