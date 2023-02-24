@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 use strict;
 use Getopt::Std;
-use Cwd 'abs_path';
+use Cwd 'abs_path'; # get the absolute path of the current working directory
 my %opts;
 getopt ('n:u:',\%opts);
 my $name=$opts{"n"};
