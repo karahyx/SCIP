@@ -62,7 +62,7 @@ close file1;
 my $preload=0;
 my ($depth,$sam);
 foreach my $cyc (@cyc){
- if (-e "$dir/$cyc/$proband.$chr.$start_original.$end_original.$type.SAM.txt.gz"){
+ if (-e "$dir/$cyc/$proband.$chr.$start_original.$end_original.$type.SAM.txt.gz"){ # -e checks if a file exists
   $preload=1;
   $depth="$dir/$cyc/$proband.$chr.$start_original.$end_original.$type.DEPTH.txt.gz";
   $sam="$dir/$cyc/$proband.$chr.$start_original.$end_original.$type.SAM.txt.gz";
@@ -90,7 +90,7 @@ if ($preload==0){
   die "No BAM/CRAM file found for $id{$proband}!";
  }
 
- print "Generating new temporary SAM/DEPTH files\n";
+ print "Generating new temporary SAM/DEPTH files\n"; # the hexadecimal number 0x400 equals 1042 in base 10
  system ("samtools view -F 0x400 \"$file\" chr$chr:$start-$end |cut -f1,2,3,4,5,6,7,8,9,12 -d\$'\t' > $dir/d1temp_server/$proband.$chr.$start_original.$end_original.$type.SAM.txt");
  system ("samtools depth \"$file\" -r chr$chr:$start-$end > $dir/d1temp_server/$proband.$chr.$start_original.$end_original.$type.DEPTH.txt");
  system ("gzip -f $dir/d1temp_server/$proband.$chr.$start_original.$end_original.$type.SAM.txt $dir/d1temp_server/$proband.$chr.$start_original.$end_original.$type.DEPTH.txt");
