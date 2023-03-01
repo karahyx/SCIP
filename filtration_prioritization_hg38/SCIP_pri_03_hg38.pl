@@ -100,7 +100,7 @@ if ($preload==0){
 else{
  print "Reusing existing temporary SAM/DEPTH files\n";
 }
-
+print "Finished generating temporary SAM/DEPTH files\n";
 my %depth;
 open file1, "gunzip -c $depth |";
 while (<file1>){
@@ -109,7 +109,7 @@ while (<file1>){
  $depth{$split1[1]}=$split1[2];
 }
 close file1;
-
+print "Added to array depth from the DEPTH files \n";
 my (%gq,%pair,%split,%largeinsert,%splitread,%dedup_sr);
 open file1, "gunzip -c $sam |";
 while (<file1>){
@@ -210,7 +210,7 @@ while (<file1>){
  } 
 }
 close file1;
-
+print "Finished paired-end and split-end analysis\n";
 open out1, ">$dir/$proband.$chr.$start.$end.temp1.txt";
 for (my $i=$start; $i<=$end; $i+=$winsize){
  my $ct_depth=0; my $tot_depth=0;
@@ -250,7 +250,7 @@ for (my $i=$start; $i<=$end; $i+=$winsize){
  print out1 "$chr\t$i\t$right\t$rt_depth\t$rt_gq\t$tot_largeinsert\t$tot_splitread\t$flag\n";
 }
 close out1;
-
+print "Output proband.chr.start.end.temp1.txt\n";
 open out1, ">$dir/$proband.$chr.$start.$end.temp2.txt";
 my $inpair=0;
 my @pair=keys %pair;
@@ -269,7 +269,7 @@ foreach my $pair (@pair){
  }
 }
 close out1;
-
+print "Output proband.chr.start.end.temp2.txt\n";
 open out1, ">$dir/$proband.$chr.$start.$end.temp3.txt";
 my $insplit=0;
 my @split=keys %split;
@@ -287,7 +287,7 @@ foreach my $split (@split){
  }
 }
 close out1;
-
+print "Output proband.chr.start.end.temp3.txt\n";
 open out1, ">$dir/$proband.$chr.$start.$end.temp4.txt";
 print out1 "x=read.table (\"$dir/$proband.$chr.$start.$end.temp1.txt\")\n";
 if ($inpair==1){
@@ -315,5 +315,5 @@ system ("R CMD BATCH --vanilla $dir/$proband.$chr.$start.$end.temp4.txt");
 #system ("rm $dir/$proband.$chr.$start.$end.temp1.txt $dir/$proband.$chr.$start.$end.temp2.txt $dir/$proband.$chr.$start.$end.temp3.txt $dir/$proband.$chr.$start.$end.temp4.txt $dir/$proband.$chr.$start.$end.temp4.txt.Rout");
 system ("rm $dir/$proband.$chr.$start.$end.temp1.txt $dir/$proband.$chr.$start.$end.temp2.txt $dir/$proband.$chr.$start.$end.temp3.txt $dir/$proband.$chr.$start.$end.temp4.txt");
 system ("rm -f $dir/$proband.$chr.$start.$end.temp4.txt.Rout ~/$proband.$chr.$start.$end.temp4.txt.Rout");
-
+print "Finished generating proband.chr.start_original.end_original.type.txt to d1stat\n";
 exit 2;
