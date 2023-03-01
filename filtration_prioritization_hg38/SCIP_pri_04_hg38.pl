@@ -38,7 +38,7 @@ close file1;
 #unless (-e "$dir/app_temp_file/$proband/$proband.$chr.$start_original.$end_original.$type.script04_file1.txt.gz"){
  system ("samtools depth $refbam -r chr$chr:$start-$end > $dir/$proband.$chr.$start_original.$end_original.$type.d101temp1");
  system ("samtools view -F 0x400 $refbam chr$chr:$start-$end |cut -f1,2,3,4,5,6,7,8,9,12 -d\$'\t' > $dir/$proband.$chr.$start_original.$end_original.$type.d101temp2");
-
+# 0x400 = DUP (PCR or optical duplicate)
  my $min=1e20; my $max=0;
  open file1, "<$dir/$proband.$chr.$start_original.$end_original.$type.d101temp2";
  my (%mq,%mqtot);
