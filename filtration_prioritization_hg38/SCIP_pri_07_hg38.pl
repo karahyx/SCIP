@@ -150,7 +150,7 @@ my $dump4=<file1>; $dump4=<file1>; $dump4=<file1>; $dump4=<file1>;
 while (<file1>){
  chomp;
  my @split1=split /\t/,$_;
- if ($split1[10] && $split1[12] && $split1[10] ne "" && $split1[12] ne ""){
+ if ($split1[10] && $split1[12] && $split1[10] ne "" && $split1[12] ne ""){ # 10="Ensembl Gene ID", 12="Phenotypes"
   if ($split1[5] ne ""){
    $omimgene{$split1[10]}=$split1[5];
   }
@@ -179,12 +179,12 @@ while (<file1>){
       $moi=$split3[$mimid+1];
      }
 
-     for (my $i=$mimid+2; $i<=$#split3; $i++){
+     for (my $i=$mimid+2; $i<=$#split3; $i++){ # if there's extra inheritance patterns for a specific phenotype
       if (exists $moi{$split3[$i]}){
-       $moi="$moi,$moi{$split3[$i]}";
+       $moi="$moi,$moi{$split3[$i]}"; # if it's already a key in %moi, add the value of that key 
       }
       else{
-       $moi="$moi,$split3[$i]";
+       $moi="$moi,$split3[$i]"; # if it's not already a key in %moi, add the new term to $moi
       }
      }
     }
@@ -296,9 +296,9 @@ while (<file1>){
 
    my $trans="";
    if ($#split7>=0){
-    for (my $i=0; $i<=$#split7; $i++){
+    for (my $i=0; $i<=$#split7; $i++){ # for each transcript
      my $part=""; my $fullfrom=""; my $fullto=""; my $affected_bp=0; my $tot_bp=0;
-     my @split16=split /\|\|/,$split9[$i];
+     my @split16=split /\|\|/,$split9[$i]; 
      my @split17=split /\|\|/,$split10[$i];
      for (my $j=0; $j<=$#split17; $j++){
       my $exonnum=$j+1;
@@ -317,12 +317,12 @@ while (<file1>){
      }
 
      for (my $j=0; $j<=$#split16; $j++){
-      my @split19=split /\:/,$split16[$j];
+      my @split19=split /\:/,$split16[$j]; # coding exon coordinates
       $tot_bp+=($split19[1]-$split19[0]+1);
       if ($end>=$split19[0] && $start<=$split19[1]){
        my @split20=@split19; push @split20, $start; push @split20, $end;
        @split20=sort{$a<=>$b}@split20;
-       $affected_bp+=($split20[2]-$split20[1]+1);
+       $affected_bp+=($split20[2]-$split20[1]+1); # why is it [2]-[1] instead of [3]-[0]?
       }
      }
 
