@@ -64,7 +64,7 @@ foreach my $jct (@jct){
  if (abs($end-$jct)<=10){
   $rightjct=1;
  }
-}
+} # Concern - the value of $leftjct and $rightjct depend on the last $jct in the loop
 
 open out1, ">$dir/app_temp_file/$proband/$proband.$chr.$start.$end.$type.script08_file1.txt";
 open out2, ">$dir/app_temp_file/$proband/$proband.$chr.$start.$end.$type.script08_file2.txt";
@@ -78,16 +78,16 @@ if ($type eq "DEL" || $type eq "INS" || $type eq "BND"){
   chomp;
   my @split2=split /\t/,$_;
   my @split3=split /\>/,$split2[0];
-  my @split4=split /\</,$split3[1];
-  if (exists $can{$split4[0]}){
+  my @split4=split /\</,$split3[1]; # gene name
+  if (exists $can{$split4[0]}){ # candidate gene list
    if ($can_gene eq 0){
     $can_gene=$split4[0];
    }
-   else{
+   else{ # Add the gene to the candidate gene list
     $can_gene="$can_gene, $split4[0]";
    }
   }
-  if ($split2[7] ne "NA" && ($split2[7]>=0.9 || $split2[8]<=0.35)){
+  if ($split2[7] ne "NA" && ($split2[7]>=0.9 || $split2[8]<=0.35)){ # pLI LOEUF
    if ($pli9_loeuf35 eq 0){
     $pli9_loeuf35=$split4[0];
    }
@@ -103,7 +103,7 @@ if ($type eq "DEL" || $type eq "INS" || $type eq "BND"){
     $pli5="$pli5, $split4[0]";
    }
   }
-  if ($split2[13] ne "NA" || $split2[14] ne "NA"){
+  if ($split2[13] ne "NA" || $split2[14] ne "NA"){ # disease annotations
    if ($split2[13] ne "NA"){
     my @split5=split /\<br\/\>/,$split2[13];
     foreach my $split5 (@split5){
@@ -128,7 +128,7 @@ if ($type eq "DEL" || $type eq "INS" || $type eq "BND"){
    }
   }
   if ($split2[17]==1){
-   $dis_dom=1;
+   $dis_dom=1; # dominant
   }
  }
  close file1;
@@ -422,16 +422,16 @@ while (<file1>){
  chomp;
  my @split1=split /\t/,$_;
  if ($chr eq $split1[0] && $type eq $split1[3] && $split1[2]>=$start && $split1[1]<=$end){
-  for (my $i=$split1[1]; $i<=$split1[2]; $i++){
-   if ($i>=$start && $i<=$end){
-    $gnomad_dedup{$i}=1;
+  for (my $i=$split1[1]; $i<=$split1[2]; $i++){ # For each position between gnomAD_common start and end coords
+   if ($i>=$start && $i<=$end){ # if the position is between variant start and end coords
+    $gnomad_dedup{$i}=1; # add it to gnomad_dedup
    }
   }
  } 
 }
 close file1;
-my @gnomad_dedup=keys %gnomad_dedup;
-my $gnomad_overlap=($#gnomad_dedup+1)/($end-$start+1);
+my @gnomad_dedup=keys %gnomad_dedup; # get the gnomAD_common positions that are within start and end coords of the variant
+my $gnomad_overlap=($#gnomad_dedup+1)/($end-$start+1); # perc of gnomad_dedup in the total length of the variant
 if ($gnomad_overlap>=0.5){
  $neg_info=1;
  my $gnomad_overlap_percent=int($gnomad_overlap*1e2*1e2)/1e2;
@@ -468,7 +468,7 @@ close file1;
 open file1, "<$lowqual_breakpoint";
 LOOP1: while (<file1>){
  chomp;
- my @split1=split /\t/,$_;
+ my @split1=split /\t/,$_; # split1[5] below is of type numeric; maybe should be split1[6] which is the type?
  if ($chr eq $split1[0] && $type eq $split1[5] && $start>=$split1[1]-$manta_ext && $start<=$split1[2]+$manta_ext && $end>=$split1[3]-$manta_ext && $end<=$split1[4]+$manta_ext){
   $manta_break=1; last LOOP1;
  }
@@ -494,13 +494,13 @@ open file1, "gunzip -c $dir/app_temp_file/$proband/$proband.$chr.$start.$end.$ty
 while (<file1>){
  chomp;
  my @split1=split /\t/,$_;
- if ($split1[3] ne "NA" && $split1[0]>=$start && $split1[0]<=$end){
-  push @pext, $split1[3];
+ if ($split1[3] ne "NA" && $split1[0]>=$start && $split1[0]<=$end){ # If the pos is within the variant
+  push @pext, $split1[3]; # pext = isoform expression values across tissues
  }
 }
 close file1;
 @pext=sort{$a<=>$b}@pext;
-my $med_pext=0; my $max_pext=0;
+my $med_pext=0; my $max_pext=0; # Get the median and max pest scores for the variant
 if ($#pext>=0){
  $med_pext=$pext[int($#pext/2)];
  $max_pext=$pext[$#pext];
