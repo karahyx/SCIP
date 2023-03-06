@@ -407,7 +407,8 @@ if ($type eq "DUP"){
  }
  if ($nonintragenic_dis_dom==1){
   push @flag, "NonIntragenic_Dom_Disease";
-  print out2 "This non-intragenic DUP overlaps gene(s) associated with dominant disorder(s): $nonintragenic_dis_any\t1\n";
+  # print out2 "This non-intragenic DUP overlaps gene(s) associated with dominant disorder(s): $nonintragenic_dis_any\t1\n"; # Andy's
+  print out2 "This non-intragenic DUP overlaps gene(s) associated with dominant disorder(s): $nonintragenic_dis_dom\t1\n"; # After correction
  }
  elsif ($nonintragenic_dis_any ne 0){
   push @flag, "NonIntragenic_NonDom_Disease";
